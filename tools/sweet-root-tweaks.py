@@ -127,8 +127,9 @@ def launchd_plist(src, dst):
     if '--net' in sys.argv:
         for k, j in NET_JOBS.items():
             jobs[k] = dict(j)
+    # SWEET_NO_BBD=1: keep Apple's backboardd (no sweet-bbd wrapper built: CPU rendering)
     for job in jobs.values():
-        if job.get('Label') == 'com.apple.backboardd':
+        if job.get('Label') == 'com.apple.backboardd' and os.environ.get('SWEET_NO_BBD') != '1':
             job['ProgramArguments'] = [BBD_WRAPPER]
     save(dst, plist, st.st_uid, st.st_gid, st.st_mode & 0o7777)
     print(f'launchd.plist: {renamed} _PanicOnCrash renamed, {len(removed)} jobs removed ({", ".join(REMOVED_JOBS)}), '

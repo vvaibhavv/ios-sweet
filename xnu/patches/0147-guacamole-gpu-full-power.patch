@@ -77,7 +77,7 @@ index a543b996a..4ce4792f5 100644
 +		return;
 +	}
 +	gpu_pool_ready = true;
-+	uint32_t high = 1;
++	uint32_t high = 0;
 +	(void)PE_parse_boot_argn("sweetgpuhigh", &high, sizeof(high));
 +	uint64_t n = (gpu_pool_ranges[GPU_POOL_RANGES - 1].end - gpu_pool_ranges[GPU_POOL_RANGES - 1].start) /
 +	    GPU_POOL_CHUNK;

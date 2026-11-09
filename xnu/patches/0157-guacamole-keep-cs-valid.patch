@@ -1,0 +1,21 @@
+--- a/bsd/kern/kern_cs.c
++++ b/bsd/kern/kern_cs.c
+@@ -284,7 +284,18 @@
+ 		retval = 1;
+ 		proc_csflags_update(p, flags);
+ 	} else {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++		/*
++		 * SWEET: no trust caches, so pages of Apple's binaries and of the
++		 * dyld shared cache come up unvalidated here. Clearing CS_VALID
++		 * makes csops() refuse entitlement queries (SpringBoard aborts in
++		 * +[SpringBoardUI load] without com.apple.springboard-ui.client).
++		 * Keep the process valid, as AMFI's trust cache would.
++		 */
++		if (0) {
++#else
+ 		if (flags & CS_VALID) {
++#endif
+ 			flags &= ~CS_VALID;
+ 			cs_procs_invalidated++;
+ 			verbose = 1;
